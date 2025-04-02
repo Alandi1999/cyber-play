@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/cyber-play/static/css/main.174d738a.css",
-    "main.js": "/cyber-play/static/js/main.810423bd.js",
+    "main.js": "/cyber-play/static/js/main.a3095f88.js",
     "static/js/952.7eb760b0.chunk.js": "/cyber-play/static/js/952.7eb760b0.chunk.js",
     "static/js/239.ae6a4450.chunk.js": "/cyber-play/static/js/239.ae6a4450.chunk.js",
     "static/js/977.5bed5d4f.chunk.js": "/cyber-play/static/js/977.5bed5d4f.chunk.js",
     "static/js/732.6a3c68ac.chunk.js": "/cyber-play/static/js/732.6a3c68ac.chunk.js",
     "index.html": "/cyber-play/index.html",
     "main.174d738a.css.map": "/cyber-play/static/css/main.174d738a.css.map",
-    "main.810423bd.js.map": "/cyber-play/static/js/main.810423bd.js.map",
+    "main.a3095f88.js.map": "/cyber-play/static/js/main.a3095f88.js.map",
     "952.7eb760b0.chunk.js.map": "/cyber-play/static/js/952.7eb760b0.chunk.js.map",
     "239.ae6a4450.chunk.js.map": "/cyber-play/static/js/239.ae6a4450.chunk.js.map",
     "732.6a3c68ac.chunk.js.map": "/cyber-play/static/js/732.6a3c68ac.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.174d738a.css",
-    "static/js/main.810423bd.js"
+    "static/js/main.a3095f88.js"
   ]
 }
