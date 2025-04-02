@@ -1,5 +1,100 @@
-<script>
-  var path = window.location.pathname;
-  window.location.href = window.location.origin + '/cyber-play/#' + path;
-</script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Página no encontrada</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
 
+    .container {
+      text-align: center;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    h1 {
+      font-size: 5rem;
+      color: #ff4d4d;
+      margin: 0;
+    }
+
+    p {
+      font-size: 1.5rem;
+      margin: 10px 0;
+    }
+
+    .insulto {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #616161;
+      margin: 20px 0;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      color: #fff;
+      background-color: #494949;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    a:hover {
+      background-color: #333;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shake {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-10px);
+      }
+      50% {
+        transform: translateX(10px);
+      }
+      75% {
+        transform: translateX(-10px);
+      }
+    }
+
+    .emoji {
+      font-size: 4rem;
+      animation: shake 0.5s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>404</h1>
+    <p>¡Che, te perdiste!</p>
+    <p class="insulto">¿Qué hacés, salame? Esta página no existe.</p>
+    <div class="emoji">🤦‍♂️</div>
+    <a href="/cyber-play">Volvé al inicio</a>
+  </div>
+</body>
+</html>
