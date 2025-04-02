@@ -29,7 +29,7 @@ function Dashboard() {
       >
         <h2 style={{ fontSize: "20px", margin: 0 }}>Admin Panel</h2>
         <a
-          href="/admin/clientes"
+          href="admin/clientes"
           style={{
             color: "#fff",
             textDecoration: "none",
@@ -42,7 +42,7 @@ function Dashboard() {
           Lista de Clientes
         </a>
         <a
-          href="/admin/editar-puntajes"
+          href="admin/editar-puntajes"
           style={{
             color: "#fff",
             textDecoration: "none",
@@ -55,7 +55,7 @@ function Dashboard() {
           Editar Puntajes
         </a>
         <a
-          href="/admin/registrar-clientes"
+          href="admin/registrar-clientes"
           style={{
             color: "#fff",
             textDecoration: "none",

@@ -13,7 +13,7 @@ function Login() {
     e.preventDefault();
     try {
       await login(email, password);
-      navigate("/admin/dashboard"); // Redirige solo después de iniciar sesión exitosamente
+      navigate("admin/dashboard"); // Redirige solo después de iniciar sesión exitosamente
     } catch (error) {
       setMensaje(`Error al iniciar sesión: ${error.message}`);
     }

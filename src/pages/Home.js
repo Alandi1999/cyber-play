@@ -6,7 +6,7 @@ function Home() {
     <div style={{ textAlign: "center", padding: "50px" }}>
       <h1>Bienvenido a Cyber Play</h1>
       <p>Descubre todos los servicios y experiencias que tenemos para ofrecerte.</p>
-      <Link to="/admin/dashboard">
+      <Link to="admin/dashboard">
         <button
           style={{
             padding: "10px 20px",
