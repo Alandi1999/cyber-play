@@ -34,7 +34,7 @@ const AuthProvider = ({ children }) => {
     });
     if (error) throw error;
     setUser(user);
-    window.location.reload(); // Fuerza la actualizacion de la pagina
+    
   };
 
   const logout = async () => {

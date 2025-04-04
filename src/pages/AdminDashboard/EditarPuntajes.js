@@ -88,23 +88,6 @@ function EditarPuntaje() {
         <button type="submit">Actualizar Puntaje</button>
       </form>
       {mensaje && <p>{mensaje}</p>}
-
-      {/* Botón para volver al AdminDashboard */}
-      <button
-        onClick={() => navigate('/admin/dashboard')}
-        style={{
-          marginTop: '20px',
-          padding: '10px 20px',
-          fontSize: '16px',
-          color: '#fff',
-          backgroundColor: '#494949',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-        }}
-      >
-        Volver al Panel de Administración
-      </button>
     </div>
   );
 }

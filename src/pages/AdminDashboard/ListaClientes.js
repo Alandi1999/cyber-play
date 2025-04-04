@@ -108,82 +108,121 @@ function ListaClientes() {
     };
 
     return (
-        <div style={{ padding: '30px' }}>
-            <h2>Lista de Clientes</h2>
+        <div style={styles.container}>
+            <h2 style={styles.title}>Lista de Clientes</h2>
 
-            <div>
-                <label>Ordenar por DNI:</label>
-                <button onClick={() => setOrden('asc')}>Ascendente</button>
-                <button onClick={() => setOrden('desc')}>Descendente</button>
-            </div>
+            <form onSubmit={manejarFiltro} style={styles.form}>
+                <div style={styles.formGroup}>
+                    <label htmlFor="orden" style={styles.label}>
+                        Ordenar por DNI:
+                    </label>
+                    <select
+                        id="orden"
+                        style={styles.input}
+                        onChange={(e) => setOrden(e.target.value)}
+                    >
+                        <option value="asc">Ascendente</option>
+                        <option value="desc">Descendente</option>
+                    </select>
+                </div>
 
-            <form onSubmit={manejarFiltro}>
-                <label>
-                    Filtrar por campo:
-                    <select value={campoFiltro} onChange={(e) => setCampoFiltro(e.target.value)} required>
+                <div style={styles.formGroup}>
+                    <label htmlFor="campo" style={styles.label}>
+                        Filtrar por campo:
+                    </label>
+                    <select
+                        id="campo"
+                        value={campoFiltro}
+                        onChange={(e) => setCampoFiltro(e.target.value)}
+                        style={styles.input}
+                        required
+                    >
                         <option value="">Seleccionar...</option>
                         <option value="nombre">Nombre</option>
                         <option value="email">Email</option>
                         <option value="telefono">Teléfono</option>
                     </select>
-                </label>
-                <label>
-                    Valor:
+                </div>
+
+                <div style={styles.formGroup}>
+                    <label htmlFor="valor" style={styles.label}>
+                        Valor:
+                    </label>
                     <input
+                        id="valor"
                         type="text"
                         value={valorFiltro}
                         onChange={(e) => setValorFiltro(e.target.value)}
+                        style={styles.input}
                         required
                     />
-                </label>
-                <button type="submit">Filtrar</button>
-                <button onClick={exportarCSV}>Exportar a CSV</button>
-                <button onClick={exportarPDF}>Exportar a PDF</button>
+                </div>
+
+                <div style={styles.buttonGroup}>
+                    <button type="submit" style={styles.button}>Filtrar</button>
+                    <button type="button" style={styles.button} onClick={exportarCSV}>
+                        Exportar a CSV
+                    </button>
+                    <button type="button" style={styles.button} onClick={exportarPDF}>
+                        Exportar a PDF
+                    </button>
+                </div>
             </form>
 
-            {mensaje && <p>{mensaje}</p>}
+            {mensaje && <p style={styles.message}>{mensaje}</p>}
 
-            <table border="1">
+            <table style={styles.table}>
                 <thead>
                     <tr>
-                        <th>DNI</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Teléfono</th>
-                        <th>Puntaje</th>
+                        <th style={styles.tableHeader}>DNI</th>
+                        <th style={styles.tableHeader}>Nombre</th>
+                        <th style={styles.tableHeader}>Email</th>
+                        <th style={styles.tableHeader}>Teléfono</th>
+                        <th style={styles.tableHeader}>Puntaje</th>
                     </tr>
                 </thead>
                 <tbody>
                     {clientes.map((cliente) => (
                         <tr key={cliente.dni}>
-                            <td>{cliente.dni}</td>
-                            <td>{cliente.nombre}</td>
-                            <td>{cliente.email}</td>
-                            <td>{cliente.telefono}</td>
-                            <td>{cliente.puntaje}</td>
+                            <td style={styles.tableCell}>{cliente.dni}</td>
+                            <td style={styles.tableCell}>{cliente.nombre}</td>
+                            <td style={styles.tableCell}>{cliente.email || 'Sin Email'}</td>
+                            <td style={styles.tableCell}>{cliente.telefono || 'Sin Teléfono'}</td>
+                            <td style={styles.tableCell}>{cliente.puntaje}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            {/* Botón para volver al AdminDashboard */}
-            <button
-                onClick={() => navigate('/admin/dashboard')}
-                style={{
-                    marginTop: '20px',
-                    padding: '10px 20px',
-                    fontSize: '16px',
-                    color: '#fff',
-                    backgroundColor: '#494949',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                }}
-            >
-                Volver al Panel de Administración
-            </button>
+            {/* Estilos Responsivos */}
+            <style>
+                {`
+                @media (max-width: 430px) {
+                    .formGroup, .buttonGroup {
+                        flex-direction: column;
+                        width: 100%;
+                    }
+                    .table {
+                        font-size: 12px;
+                    }
+                }
+                `}
+            </style>
         </div>
     );
 }
+
+const styles = {
+    container: { padding: '20px' },
+    title: { fontSize: '1.5rem', marginBottom: '20px' },
+    form: { display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' },
+    formGroup: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start' },
+    label: { marginBottom: '5px', fontSize: '14px' },
+    input: { padding: '10px', fontSize: '14px', width: '150px' },
+    button: { padding: '10px', fontSize: '14px', margin: '5px' },
+    table: { width: '100%', marginTop: '20px', borderCollapse: 'collapse' },
+    tableHeader: { backgroundColor: '#616161', color: '#fff', padding: '10px' },
+    tableCell: { padding: '10px', border: '1px solid #ddd' },
+};
 
 export default ListaClientes;

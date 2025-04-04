@@ -62,56 +62,171 @@ function ClienteForm() {
   };
 
   return (
-    <div style={{ padding: '30px' }}>
-      <h2>Registrar Cliente</h2>
-      <form onSubmit={manejarSubmit}>
-        <label>
-          DNI:
-          <input type="text" name="dni" value={cliente.dni} onChange={manejarCambio} required />
-        </label>
-        <br />
-        <label>
-          Nombre:
-          <input type="text" name="nombre" value={cliente.nombre} onChange={manejarCambio} />
-        </label>
-        <br />
-        <label>
-          Email:
-          <input type="email" name="email" value={cliente.email} onChange={manejarCambio} />
-        </label>
-        <br />
-        <label>
-          Teléfono:
-          <input type="text" name="telefono" value={cliente.telefono} onChange={manejarCambio} />
-        </label>
-        <br />
-        <label>
-          Puntaje:
-          <input type="number" name="puntaje" value={cliente.puntaje} onChange={manejarCambio} />
-        </label>
-        <br />
-        <button type="submit">Registrar</button>
+    <div style={styles.container}>
+      <h2 style={styles.title}>Registrar Cliente</h2>
+      <form onSubmit={manejarSubmit} style={styles.form}>
+        <div style={styles.formGroup}>
+          <label htmlFor="dni" style={styles.label}>
+            DNI:
+          </label>
+          <input
+            type="text"
+            name="dni"
+            id="dni"
+            value={cliente.dni}
+            onChange={manejarCambio}
+            style={styles.input}
+            required
+          />
+        </div>
+        <div style={styles.formGroup}>
+          <label htmlFor="nombre" style={styles.label}>
+            Nombre:
+          </label>
+          <input
+            type="text"
+            name="nombre"
+            id="nombre"
+            value={cliente.nombre}
+            onChange={manejarCambio}
+            style={styles.input}
+          />
+        </div>
+        <div style={styles.formGroup}>
+          <label htmlFor="email" style={styles.label}>
+            Email:
+          </label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            value={cliente.email}
+            onChange={manejarCambio}
+            style={styles.input}
+          />
+        </div>
+        <div style={styles.formGroup}>
+          <label htmlFor="telefono" style={styles.label}>
+            Teléfono:
+          </label>
+          <input
+            type="text"
+            name="telefono"
+            id="telefono"
+            value={cliente.telefono}
+            onChange={manejarCambio}
+            style={styles.input}
+          />
+        </div>
+        <div style={styles.formGroup}>
+          <label htmlFor="puntaje" style={styles.label}>
+            Puntaje:
+          </label>
+          <input
+            type="number"
+            name="puntaje"
+            id="puntaje"
+            value={cliente.puntaje}
+            onChange={manejarCambio}
+            style={styles.input}
+          />
+        </div>
+        <button type="submit" style={styles.button}>Registrar</button>
       </form>
-      {mensaje && <p>{mensaje}</p>}
+      {mensaje && <p style={styles.message}>{mensaje}</p>}
 
-      {/* Botón para volver al AdminDashboard */}
-      <button
-        onClick={() => navigate('/admin/dashboard')}
-        style={{
-          marginTop: '20px',
-          padding: '10px 20px',
-          fontSize: '16px',
-          color: '#fff',
-          backgroundColor: '#494949',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-        }}
-      >
-        Volver al Panel de Administración
-      </button>
+      {/* Estilos responsivos */}
+      <style>
+        {`
+          @media (max-width: 430px) {
+            .container {
+              padding: 15px;
+            }
+
+            .title {
+              font-size: 1.5em;
+            }
+
+            .form {
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+            }
+
+            .formGroup {
+              width: 100%;
+            }
+
+            .label {
+              font-size: 14px;
+              margin-bottom: 5px;
+            }
+
+            .input {
+              font-size: 14px;
+              width: 100%;
+              padding: 10px;
+              margin-bottom: 10px;
+            }
+
+            .button {
+              font-size: 1em;
+              padding: 10px;
+              width: 100%;
+            }
+          }
+        `}
+      </style>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    padding: '30px',
+    textAlign: 'center',
+  },
+  title: {
+    fontSize: '2rem',
+    marginBottom: '20px',
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '15px',
+  },
+  formGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '100%',
+    maxWidth: '300px',
+  },
+  label: {
+    marginBottom: '5px',
+    fontSize: '16px',
+  },
+  input: {
+    padding: '10px',
+    fontSize: '16px',
+    borderRadius: '5px',
+    border: '1px solid #ccc',
+    width: '100%',
+  },
+  button: {
+    padding: '10px',
+    fontSize: '16px',
+    color: '#fff',
+    backgroundColor: '#494949',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+  },
+  message: {
+    marginTop: '10px',
+    color: 'red',
+  },
+};
 
 export default ClienteForm;
