@@ -1,9 +1,58 @@
-import React from "react";
-import { Link, Outlet } from "react-router-dom"; // Importamos Outlet
+import React, { useState, useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
+import Sidebar from "../../components/Sidebar";
+import StatCard from "../../components/StatCard";
+import { supabase } from "../../services/supabaseClient";
+import "../../styles/responsive.css";
 
 function Dashboard() {
   const { logout } = useAuth();
+  const [stats, setStats] = useState({
+    totalClientes: 0,
+    promedioPuntaje: 0,
+    clientesActivos: 0,
+    puntajeTotal: 0
+  });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    fetchStats();
+    
+    // Detectar cambios en el tamaño de la pantalla
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const { data: clientes, error } = await supabase
+        .from('clientes')
+        .select('*');
+
+      if (error) throw error;
+
+      const totalClientes = clientes.length;
+      const puntajeTotal = clientes.reduce((sum, cliente) => sum + (cliente.puntaje || 0), 0);
+      const promedioPuntaje = totalClientes > 0 ? puntajeTotal / totalClientes : 0;
+      const clientesActivos = clientes.filter(cliente => cliente.estado === 'activo').length;
+
+      setStats({
+        totalClientes,
+        promedioPuntaje: promedioPuntaje.toFixed(1),
+        clientesActivos,
+        puntajeTotal
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -14,184 +63,170 @@ function Dashboard() {
     }
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
-    <div style={styles.container}>
-      {/* Menú lateral */}
-      <nav style={styles.nav}>
-        <h2 style={styles.navTitle}>Admin Panel</h2>
-        <Link to="clientes" style={styles.link}>
-          Lista de Clientes
-        </Link>
-        <Link to="editar-puntajes" style={styles.link}>
-          Editar Puntajes
-        </Link>
-        <Link to="registrar-clientes" style={styles.link}>
-          Registrar Cliente
-        </Link>
-        <Link to="editar-cliente" style={styles.link}>
-          Editar Cliente
-        </Link>
-        <button onClick={handleLogout} style={styles.logoutButton}>
-          Cerrar Sesión
+    <div 
+      className="dashboard-container"
+      style={{
+        display: "flex",
+        minHeight: "100vh",
+        background: "#0f0a1f",
+        color: "#fff",
+        position: "relative",
+        overflow: "hidden"
+      }}
+    >
+      {/* Efecto de fondo con gradiente */}
+      <div style={{
+        position: "absolute",
+        top: "0",
+        left: "0",
+        right: "0",
+        bottom: "0",
+        background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)",
+        opacity: 0.7,
+      }} />
+      
+      {/* Botón de menú móvil */}
+      {isMobile && (
+        <button
+          onClick={toggleMobileMenu}
+          style={{
+            position: "fixed",
+            top: "15px",
+            left: "15px",
+            zIndex: 100,
+            background: "rgba(30, 24, 54, 0.8)",
+            border: "1px solid rgba(139, 92, 246, 0.3)",
+            borderRadius: "8px",
+            padding: "10px",
+            color: "#fff",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            backdropFilter: "blur(10px)",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          {isMobileMenuOpen ? "✕" : "☰"}
         </button>
-      </nav>
+      )}
+      
+      {/* Sidebar para pantallas grandes o menú móvil abierto */}
+      {(!isMobile || isMobileMenuOpen) && (
+        <AnimatePresence>
+          <motion.div
+            initial={{ x: isMobile ? -300 : 0, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: isMobile ? -300 : 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              position: isMobile ? "fixed" : "relative",
+              top: 0,
+              left: 0,
+              height: "100vh",
+              zIndex: 99,
+            }}
+          >
+            <Sidebar onLogout={handleLogout} />
+          </motion.div>
+        </AnimatePresence>
+      )}
+      
+      {/* Overlay para cerrar el menú móvil al hacer clic fuera */}
+      {isMobile && isMobileMenuOpen && (
+        <div
+          onClick={toggleMobileMenu}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.5)",
+            zIndex: 98,
+          }}
+        />
+      )}
+      
+      <motion.div
+        className="content-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        style={{
+          flex: 1,
+          padding: "30px",
+          overflowY: "auto",
+          position: "relative",
+          zIndex: 1,
+          marginLeft: isMobile ? 0 : "auto",
+          width: isMobile ? "100%" : "auto",
+        }}
+      >
+        <motion.div
+          className="stats-grid"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: "20px",
+            marginBottom: "30px"
+          }}
+        >
+          <StatCard
+            title="Total Clientes"
+            value={stats.totalClientes}
+            icon="👥"
+            color="#a855f7"
+          />
+          <StatCard
+            title="Promedio Puntaje"
+            value={stats.promedioPuntaje}
+            icon="⭐"
+            color="#6366f1"
+          />
+          <StatCard
+            title="Clientes Activos"
+            value={stats.clientesActivos}
+            icon="✅"
+            color="#8b5cf6"
+          />
+          <StatCard
+            title="Puntaje Total"
+            value={stats.puntajeTotal}
+            icon="🏆"
+            color="#a855f7"
+          />
+        </motion.div>
 
-      {/* Contenido principal */}
-      <div style={styles.content}>
-        <Outlet /> {/* Renderiza las rutas hijas aquí */}
-      </div>
-
-      {/* Estilos globales */}
-      <style>
-        {`
-          /* Fondo personalizado */
-          .container {
-            display: flex;
-            height: 100vh;
-            backgroundImage: "url('/cyber-play/2.webp')";
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed; /* Fondo fijo al desplazarse */
-            color: #fff; /* Texto blanco para mejor contraste */
-          }
-
-          .nav {
-            width: 250px;
-            background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
-            color: #fff;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-          }
-
-          .nav-title {
-            font-size: 20px;
-            margin: 0;
-          }
-
-          .nav-link {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.3); /* Botones semitransparentes */
-            text-align: center;
-            transition: background-color 0.3s ease;
-          }
-
-          .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.5); /* Brilla al pasar el mouse */
-          }
-
-          .logout-button {
-            margin-top: auto;
-            padding: 10px;
-            font-size: 16px;
-            color: #fff;
-            background-color: rgba(255, 77, 77, 0.8); /* Botón semitransparente */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-          }
-
-          .logout-button:hover {
-            background-color: rgba(255, 77, 77, 1); /* Botón más sólido al pasar el mouse */
-          }
-
-          .content {
-            flex-grow: 1;
-            padding: 30px;
-            background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente para el contenido */
-            overflow-y: auto; /* Permite scroll si hay contenido largo */
-          }
-
-          /* Responsive para iPhone 14 Pro Max */
-          @media (max-width: 430px) {
-            .container {
-              flex-direction: column;
-              height: auto;
-            }
-
-            .nav {
-              width: 100%;
-              flex-direction: row;
-              flex-wrap: wrap;
-              justify-content: space-evenly;
-              gap: 10px;
-            }
-
-            .nav-title {
-              width: 100%;
-              text-align: center;
-              font-size: 18px;
-              margin-bottom: 10px;
-            }
-
-            .nav-link, .logout-button {
-              flex: 1 0 45%; /* Dos botones por fila */
-              text-align: center;
-              margin: 5px 0;
-            }
-
-            .content {
-              padding: 15px;
-            }
-          }
-        `}
-      </style>
+        <motion.div
+          className="outlet-container"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          style={{
+            background: "rgba(30, 24, 54, 0.7)",
+            borderRadius: "15px",
+            padding: "20px",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(139, 92, 246, 0.2)",
+            minHeight: "calc(100vh - 250px)",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            transition: "all 0.4s ease"
+          }}
+        >
+          <Outlet />
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    display: "flex",
-    height: "100vh",
-    backgroundImage: "url('/cyber-play/2.webp')", // Actualiza la ruta de la imagen
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundAttachment: "fixed",
-    color: "#fff",
-  },
-  nav: {
-    width: "250px",
-    backgroundColor: "rgba(0, 0, 0, 0.7)", // Fondo semitransparente
-    color: "#fff",
-    padding: "20px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "20px",
-  },
-  navTitle: {
-    fontSize: "20px",
-    margin: 0,
-  },
-  link: {
-    color: "#fff",
-    textDecoration: "none",
-    padding: "10px",
-    borderRadius: "5px",
-    backgroundColor: "rgba(255, 255, 255, 0.3)", // Botones semitransparentes
-    textAlign: "center",
-  },
-  logoutButton: {
-    marginTop: "auto",
-    padding: "10px",
-    fontSize: "16px",
-    color: "#fff",
-    backgroundColor: "rgba(255, 77, 77, 0.8)", // Botón semitransparente
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-  content: {
-    flexGrow: 1,
-    padding: "30px",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo semitransparente para el contenido
-    overflowY: "auto",
-  },
-};
 
 export default Dashboard;
